@@ -38,6 +38,15 @@ public class UserService {
         return userAccountRepository.findById(id);
     }
 
+    @Transactional
+    public UserAccount rotateApiKey(UUID userId) {
+        UserAccount user = userAccountRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        user.rotateApiKey();
+        return userAccountRepository.save(user);
+    }
+
     private String generateApiKey() {
         return UUID.randomUUID().toString().replace("-", "");
     }
