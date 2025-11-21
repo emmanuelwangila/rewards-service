@@ -24,7 +24,7 @@ import java.util.UUID;
 @Slf4j
 public class RewardService {
 
-    private static final long POINTS_PER_DOLLAR = 100; // 1 point per $1
+    private static final long POINTS_PER_DOLLAR = 1; // 1 point per $1
     private static final BigDecimal DOLLARS_PER_POINT = BigDecimal.valueOf(0.01); // $0.01 per point
 
     private final UserAccountRepository userAccountRepository;
