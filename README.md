@@ -47,7 +47,25 @@ Comprehensive testing ensures code quality and reliability:
 - **Test Coverage**: Aims for high coverage of business logic.
 - **Testcontainers**: Uses Docker containers for realistic testing environments.
 
-Run tests: `./mvnw test`
+#### Run All Tests
+```bash
+./mvnw test
+```
+
+#### Run Specific Test Classes
+- Basic context load test: `./mvnw test -Dtest=RewardsServiceApplicationTests`
+- Integration test: `./mvnw test -Dtest=RewardServiceIntegrationTest`
+- Multiple classes: `./mvnw test -Dtest=RewardsServiceApplicationTests,RewardServiceIntegrationTest`
+- Pattern matching: `./mvnw test -Dtest=*IntegrationTest`
+
+#### Test Instructions
+1. Ensure Docker is running for Testcontainers (required for `RewardServiceIntegrationTest`)
+2. Run unit tests: `./mvnw test -Dtest=*Test -Dtest=!*IntegrationTest`
+3. Run integration tests: `./mvnw test -Dtest=*IntegrationTest`
+4. View test coverage: `./mvnw test jacoco:report` (report in `target/site/jacoco/`)
+5. Run tests quietly: `./mvnw test -q`
+6. Debug output: `./mvnw test -X`
+7. Skip tests during build: `./mvnw clean install -DskipTests`
 
 ### Documentation
 API documentation is provided via:
@@ -158,21 +176,6 @@ All endpoints require `X-API-Key` header for authentication.(Except for [http://
 - **Test**: PostgreSQL via Testcontainers
 - **Production**: Configure PostgreSQL in `application-prod.properties`
 
-## Testing
-
-Run tests with:
-```bash
-./mvnw test
-```
-
-Integration tests use Testcontainers with PostgreSQL.
-
-### Test Instructions
-
-1. Ensure Docker is running for Testcontainers
-2. Run unit tests: `./mvnw test -Dtest=*Test`
-3. Run integration tests: `./mvnw test -Dtest=*IntegrationTest`
-4. View test coverage (if configured): `./mvnw test jacoco:report`
 
 ## Deployment
 
