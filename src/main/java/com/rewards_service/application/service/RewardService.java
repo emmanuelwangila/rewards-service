@@ -1,6 +1,9 @@
 package com.rewards_service.application.service;
 
 import com.rewards_service.domain.model.*;
+import com.rewards_service.dto.AwardResponse;
+import com.rewards_service.dto.BalanceResponse;
+import com.rewards_service.dto.RedeemResponse;
 import com.rewards_service.infrastructure.repository.RewardTransactionRepository;
 import com.rewards_service.infrastructure.repository.UserAccountRepository;
 import com.rewards_service.infrastructure.repository.WalletEntryRepository;
@@ -32,7 +35,7 @@ public class RewardService {
 
     @Transactional
     @CacheEvict(value = "walletBalance", key = "#userId")
-    public void awardPoints(UUID userId, long amountCents, String referenceId) {
+    public AwardResponse awardPoints(UUID userId, long amountCents, String referenceId) {
         UserAccount user = userAccountRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
@@ -50,14 +53,16 @@ public class RewardService {
         wallet.setPoints(wallet.getPoints() + points);
         walletRepository.save(wallet);
 
-        eventPublisher.publishRewardEarned(userId, points, "Awarded for purchase");
+        // eventPublisher.publishRewardEarned(userId, points, "Awarded for purchase");
 
         log.info("Awarded {} points to user {}", points, userId);
+
+        return new AwardResponse(user.getId(), points, transaction.getId());
     }
 
     @Transactional
     @CacheEvict(value = "walletBalance", key = "#userId")
-    public void redeemPoints(UUID userId, long points) {
+    public RedeemResponse redeemPoints(UUID userId, long points) {
         UserAccount user = userAccountRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
@@ -84,20 +89,22 @@ public class RewardService {
         WalletEntry entry = WalletEntry.credit(user, monetaryValue, "USD", "Points redemption");
         walletEntryRepository.save(entry);
 
-        eventPublisher.publishRewardRedeemed(userId, points, "Redeemed to wallet");
+        // eventPublisher.publishRewardRedeemed(userId, points, "Redeemed to wallet");
 
         log.info("Redeemed {} points for ${} to user {}", points, monetaryValue, userId);
+
+        return new RedeemResponse(user.getId(), points, monetaryValue, transaction.getId());
     }
 
     @Cacheable(value = "walletBalance", key = "#userId")
-    public BalanceResponse getBalance(UUID userId) {
+    public com.rewards_service.dto.BalanceResponse getBalance(UUID userId) {
         UserAccount user = userAccountRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
         Wallet wallet = walletRepository.findByUserAccount(user)
                 .orElseGet(() -> createWallet(user));
 
-        return new BalanceResponse(user.getId(), wallet.getPoints(), wallet.getBalance());
+        return new com.rewards_service.dto.BalanceResponse(user.getId(), wallet.getPoints(), wallet.getBalance());
     }
 
     private Wallet getOrCreateWallet(UserAccount user) {
@@ -110,20 +117,4 @@ public class RewardService {
         return walletRepository.save(wallet);
     }
 
-    // DTO for balance response
-    public static class BalanceResponse {
-        private final UUID userId;
-        private final long points;
-        private final double balance;
-
-        public BalanceResponse(UUID userId, long points, double balance) {
-            this.userId = userId;
-            this.points = points;
-            this.balance = balance;
-        }
-
-        public UUID getUserId() { return userId; }
-        public long getPoints() { return points; }
-        public double getBalance() { return balance; }
-    }
 }
