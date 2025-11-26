@@ -147,11 +147,25 @@ Database abstraction supports multiple storage backends:
 
 ## API Endpoints
 
+- `POST /api/users` - Create a new user account
 - `POST /api/rewards/award` - Award points to user
 - `POST /api/rewards/redeem` - Redeem points for money
 - `GET /api/rewards/balance/{userId}` - Get user balance
 
 All endpoints require `X-API-Key` header for authentication.(Except for [http://localhost:8080/api/users] for User Creation then we obtain api-key for the user)
+
+### Create User Request JSON
+
+```json
+{
+  "externalUserId": "user123",
+  "displayName": "John Doe",
+  "email": "john.doe@example.com",
+  "tier": "STANDARD"
+}
+```
+
+Valid tier values: `STANDARD`, `SILVER`, `GOLD`, `PLATINUM`
 
 ## Setup Instructions
 
