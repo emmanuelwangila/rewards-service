@@ -1,8 +1,10 @@
 # Mini Rewards Service
 
-> **Note:** This project has been converted fully to **Kotlin** — all sources and tests live under `src/main/kotlin` and `src/test/kotlin`.
+**Primary Language: Kotlin** ☕
 
-A Spring Boot-based rewards service that allows users to earn and redeem points based on purchases. This service implements Clean Architecture principles with comprehensive testing, security, and monitoring features.
+> This project is built entirely in **Kotlin** — all sources and tests live under `src/main/kotlin` and `src/test/kotlin`. The service leverages Kotlin's conciseness, null safety, and interoperability with Java/Spring Boot.
+
+A Spring Boot-based rewards service written in Kotlin that allows users to earn and redeem points based on purchases. This service implements Clean Architecture principles with comprehensive testing, security, and monitoring features.
 
 ## Requirements Implementation
 
@@ -20,8 +22,8 @@ This structure ensures:
 - Easy replacement of external dependencies
 - Clear separation of responsibilities
 
-### Clean Code
-The codebase adheres to Clean Code principles:
+### Clean Code (Kotlin)
+The codebase adheres to Clean Code principles, leveraging Kotlin's features for enhanced readability and safety:
 
 - **Single Responsibility Principle**: Each class has one reason to change (e.g., RewardService handles rewards logic, UserService handles user management).
 - **Open/Closed Principle**: Code is open for extension but closed for modification (e.g., UserTier enum can be extended with new tiers).
@@ -29,6 +31,7 @@ The codebase adheres to Clean Code principles:
 - **DRY (Don't Repeat Yourself)**: Common logic is extracted (e.g., wallet creation in a private method).
 - **Meaningful Names**: Classes, methods, and variables have descriptive names (e.g., `awardPoints`, `redeemPoints`).
 - **Small Functions**: Methods are focused and short, doing one thing well.
+- **Kotlin Advantages**: Null safety with nullable types, extension functions, data classes, and immutability reduce boilerplate and bugs.
 - **Comprehensive Comments**: Code is self-documenting with necessary comments for complex logic.
 
 ### Design Patterns
@@ -173,32 +176,37 @@ Valid tier values: `STANDARD`, `SILVER`, `GOLD`, `PLATINUM`
 
 ### Prerequisites
 
-- Java 21
-- Maven 3.6+
-- Docker (for testcontainers)
+- **Java 21** (Kotlin targets Java 21)
+- **Maven 3.6+** (with Kotlin Maven Plugin)
+- **Docker** (for testcontainers and Docker Compose)
 
 ### Running Locally
 
 1. Clone the repository
-2. Run with Maven:
+2. Build and run with Maven (compiles Kotlin sources):
    ```bash
    ./mvnw spring-boot:run
    ```
-3. Swagger UI at `http://localhost:8080/swagger-ui.html`
+3. Or use the local profile with in-memory H2 database (no external services needed):
+   ```bash
+   SPRING_PROFILES_ACTIVE=local ./mvnw spring-boot:run
+   ```
+4. Swagger UI at `http://localhost:8080/swagger-ui.html`
 
 ### Database Configuration
 
-- **Development**:PostgreSQL
-- **Test**: PostgreSQL via Testcontainers
-- **Production**: Configure PostgreSQL in `application-prod.properties`
+- **Development**: H2 in-memory or PostgreSQL (configurable in application-local.properties)
+- **Test**: PostgreSQL via Testcontainers (configured in pom.xml)
+- **Production**: PostgreSQL (configure in application-prod.properties)
 
 
 ## Deployment
 
-### Local Development
+### Local Development (Kotlin)
 
-1. Run the application: `./mvnw spring-boot:run`
-2. Access the service at `http://localhost:8080`
+1. Run the application (Maven automatically compiles Kotlin sources): `./mvnw spring-boot:run`
+2. Or with local profile: `SPRING_PROFILES_ACTIVE=local ./mvnw spring-boot:run`
+3. Access the service at `http://localhost:8080`
 
 ### Docker
 
@@ -249,7 +257,18 @@ Key configuration properties:
 - Health checks: `/actuator/health`
 - Metrics: `/actuator/metrics`
 - Logs: Structured logging with SLF4J
+## Tech Stack
 
+- **Language**: Kotlin (100% Kotlin codebase)
+- **Framework**: Spring Boot 3.5.7
+- **Build**: Maven with Kotlin compiler plugin
+- **Database**: H2 (dev), PostgreSQL (prod)
+- **Cache**: Redis
+- **Messaging**: RabbitMQ
+- **Testing**: JUnit 5, Mockk (Kotlin mocking), Testcontainers
+- **Documentation**: Swagger/OpenAPI (Springdoc)
+- **Monitoring**: Spring Boot Actuator
+- **Rate Limiting**: Bucket4j
 ## Summary
 
 ### How Points Are Earned
