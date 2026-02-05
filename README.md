@@ -1,5 +1,7 @@
 # Mini Rewards Service
 
+> **Note:** This project has been converted fully to **Kotlin** — all sources and tests live under `src/main/kotlin` and `src/test/kotlin`.
+
 A Spring Boot-based rewards service that allows users to earn and redeem points based on purchases. This service implements Clean Architecture principles with comprehensive testing, security, and monitoring features.
 
 ## Requirements Implementation
