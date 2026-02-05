@@ -44,7 +44,7 @@ class WalletEntry protected constructor() {
         currency: String,
         description: String,
         type: WalletEntryType
-    ) {
+    ) : this() {
         this.id = id
         this.userAccount = userAccount
         this.amount = amount

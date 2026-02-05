@@ -5,18 +5,26 @@ import org.springframework.stereotype.Service
 import java.util.UUID
 
 @Service
-class RewardEventPublisher(private val rabbitTemplate: RabbitTemplate) {
+class RewardEventPublisher(private val rabbitTemplate: RabbitTemplate?) {
 
     fun publishRewardEarned(userId: UUID, points: Long, description: String) {
         val event = RewardEvent(userId, "EARNED", points, description)
-        rabbitTemplate.convertAndSend("rewards.exchange", "reward.earned", event)
-        println("Published reward earned event for user $userId: $points points")
+        if (rabbitTemplate != null) {
+            rabbitTemplate.convertAndSend("rewards.exchange", "reward.earned", event)
+            println("Published reward earned event for user $userId: $points points")
+        } else {
+            println("[local] Skipping publishRewardEarned (no RabbitTemplate) for user $userId: $points points")
+        }
     }
 
     fun publishRewardRedeemed(userId: UUID, points: Long, description: String) {
         val event = RewardEvent(userId, "REDEEMED", points, description)
-        rabbitTemplate.convertAndSend("rewards.exchange", "reward.redeemed", event)
-        println("Published reward redeemed event for user $userId: $points points")
+        if (rabbitTemplate != null) {
+            rabbitTemplate.convertAndSend("rewards.exchange", "reward.redeemed", event)
+            println("Published reward redeemed event for user $userId: $points points")
+        } else {
+            println("[local] Skipping publishRewardRedeemed (no RabbitTemplate) for user $userId: $points points")
+        }
     }
 
     class RewardEvent {

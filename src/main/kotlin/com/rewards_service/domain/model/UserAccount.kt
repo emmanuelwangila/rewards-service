@@ -41,7 +41,7 @@ class UserAccount protected constructor() {
         email: String,
         apiKey: String,
         tier: UserTier
-    ) {
+    ) : this() {
         this.id = id
         this.externalUserId = externalUserId
         this.displayName = displayName
